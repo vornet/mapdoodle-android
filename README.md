@@ -1,10 +1,10 @@
 # Map Doodle for Android
 
 [ ![Core](https://api.bintray.com/packages/vornet/maven/mapdoodle%3Acore/images/download.svg) ](https://bintray.com/vornet/maven/mapdoodle%3Acore/_latestVersion)
-[![Build Status](https://travis-ci.org/vornet/mapdoodle.svg)](https://travis-ci.org/vornet/mapdoodle)
+[![Build Status](https://travis-ci.org/vornet/mapdoodle-android.svg)](https://travis-ci.org/vornet/mapdoodle-android)
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/vornet/mapdoodle/blob/master/LICENSE.txt)
 
-![Screenshots](https://raw.githubusercontent.com/vornet/mapdoodle/master/art/mapdoodledemo.gif)
+![Screenshots](https://raw.githubusercontent.com/vornet/mapdoodle-android/master/art/mapdoodledemo.gif)
 
 Android library to create common map animations for Google Maps and other providers.  Note, work-in-progress.
 
