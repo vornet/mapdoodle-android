@@ -1,6 +1,6 @@
 # Map Doodle for Android
 
-[ ![Core](https://api.bintray.com/packages/vornet/maven/mapdoodle%3Acore/images/download.svg) ](https://bintray.com/vornet/maven/mapdoodle%3Acore/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/vornet/maven/mapdoodle/images/download.svg) ](https://bintray.com/vornet/maven/mapdoodle/_latestVersion)
 [![Build Status](https://travis-ci.org/vornet/mapdoodle-android.svg)](https://travis-ci.org/vornet/mapdoodle-android)
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/vornet/mapdoodle/blob/master/LICENSE.txt)
 
