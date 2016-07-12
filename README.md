@@ -30,13 +30,13 @@ The *core* module contains all the major classes of this library.  Other modules
 ```gradle
 dependencies {
 	// ... other dependencies here
-    compile 'com.github.vornet.mapdoodle:core:0.0.1'
+    compile 'com.github.vornet.mapdoodle:core:0.0.3'
 }
 ```
 
 # Basic Usage
 
-Usage is really simple.  Once you get an instance of GoogleMaps, just pass it along to an instance of MapDoodler.
+Once you get an instance of GoogleMaps, just pass it along to an instance of MapDoodler.
 Then, add your waypoints to a `GeoPath`.
 
 ```java
@@ -45,27 +45,86 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMapDoodler = new MapDoodler(this, googleMap);
         
+        Context context = getBaseContext();
+        GoogleMap googleMap = mGoogleMap;
+        
+        // Note: You may need to use a layout listener to determine when views has been laid out. (see sample)    
+        int viewPortWidth = mMapView.getWidth();
+        int viewPortHeight = mMapView.getHeight();
+        int refreshRate = 500;
+        
+        mMapDoodler = new MapDoodler(
+                context,
+                googleMap,
+                viewPortWidth,
+                viewPortHeight,
+                refreshRate);
+        
+        AnimatedPathDoodleStyle pathDoodleStyle = new AnimatedPathDoodleStyle();
+        pathDoodleStyle.setThickness(10.0);
+        pathDoodleStyle.setColor(Color.BLUE);
+        pathDoodleStyle.setTracerThickness(5.0);
+        pathDoodleStyle.setTracerColor(Color.GRAY);
+        pathDoodleStyle.setSpeed(60.0); // Km Per Hr
+                
         // Shining Sea Bikeway Path
-        GeoPath shiningSeaBikeway = new GeoPath();
-        shiningSeaBikeway.addPoint(41.551490, -70.627179);
-        shiningSeaBikeway.addPoint(41.550410, -70.627761);
-        shiningSeaBikeway.addPoint(41.534456, -70.641752);
-        shiningSeaBikeway.addPoint(41.534319, -70.642047);
-        shiningSeaBikeway.addPoint(41.534032, -70.642455);
-        shiningSeaBikeway.addPoint(41.531242, -70.645581);
-        shiningSeaBikeway.addPoint(41.524383, -70.653310);
-        shiningSeaBikeway.addPoint(41.524383, -70.653310);
-        shiningSeaBikeway.addPoint(41.523319, -70.655396);       
+        GeoPoint[] shiningSeaBikewayPoints = new GeoPoint[]{
+            new GeoPoint(41.551490, -70.627179),
+            new GeoPoint(41.550410, -70.627761),
+            new GeoPoint(41.534456, -70.641752),
+            new GeoPoint(41.534319, -70.642047),
+            new GeoPoint(41.534032, -70.642455),
+            new GeoPoint(41.531242, -70.645581),
+            new GeoPoint(41.524383, -70.653310),
+            new GeoPoint(41.524383, -70.653310)
+        };     
         
         // Add the path to MapDoodler
-        mMapDoodler.addPath(shiningSeaBikeway);
+        Doodle shiningSeaBikewayDoodle = mMapDoodler.addAnimatedPathDoodle(pathDoodleStyle, shiningSeaBikewayPoints);
         
-        // Animate the path
-        double speedInKmPerHour = 15.0;
-        mMapDoodler.animatePath(speedInKmPerHour);
+        // Zoom to fit path, animating and rotate view to fit such that the first and last points line up vertically.
+        int padding = 0;
+        int shouldAnimate = true;
+        int shouldChangeBearing = true;
+        mMapDoodler.zoomToFitDoodle(shiningSeaBikewayDoodle, padding, shouldAnimate, shouldChangeBearing);
     }
 
+```
+
+Static (not animated) path doodles can also be added.
+
+```java
+
+PathDoodleStyle pathDoodleStyle = new PathDoodleStyle();
+pathDoodleStyle.setThickness(10.0);
+pathDoodleStyle.setColor(Color.BLUE);
+                
+GeoPoint[] shiningSeaBikewayPoints = new GeoPoint[] { 
+    // ... 
+}
+
+Doodle shiningSeaBikewayDoodle = mMapDoodler.addPathDoodle(pathDoodleStyle, shiningSeaBikewayPoints);
+
+```
+
+Doodles can be added at anytime (for example, via user interaction.)
+
+The following is supported for doodle management:
+
+```java
+MapDoodler mapDoodler = new MapDoodler();
+// Add a new doodle.
+Doodle doodle = mMapDoodler.addPathDoodle(pathDoodleStyle, points);
+// Assign a string ID to a doodle.
+doodle.setId("foo");
+// Later, you can retrieve the doodle by ID.
+Doodle doodle = mapDoodler.getDoodleById("foo");
+// Remove a doodle from the map
+mapDoodler.removeDoodle(doodle);
+// Zoom to fit a doodle.
+mapDoodler.zoomToFitDoodle();
+// Zoom to fit all doodles on the map.
+mapDoodler.zoomToFitAllDoodles();
 
 ```

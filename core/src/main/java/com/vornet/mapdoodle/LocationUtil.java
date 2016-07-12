@@ -59,14 +59,14 @@ public class LocationUtil {
 
     public static double calculateDistance(GeoPoint point1, GeoPoint point2) {
         double R = 6371000;
-        double φ1 = Math.toRadians(point1.getLatitude());
-        double φ2 = Math.toRadians(point2.getLatitude());
-        double Δφ = Math.toRadians(point2.getLatitude() - point1.getLatitude());
-        double Δλ = Math.toRadians(point2.getLongitude() - point1.getLongitude());
+        double p1l = Math.toRadians(point1.getLatitude());
+        double p2l = Math.toRadians(point2.getLatitude());
+        double dla = Math.toRadians(point2.getLatitude() - point1.getLatitude());
+        double dlo = Math.toRadians(point2.getLongitude() - point1.getLongitude());
 
-        double a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        double a = Math.sin(dla / 2) * Math.sin(dla / 2) +
+                Math.cos(p1l) * Math.cos(p2l) *
+                        Math.sin(dlo / 2) * Math.sin(dlo / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }

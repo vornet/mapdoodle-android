@@ -9,5 +9,6 @@ public interface Doodle {
     GeoPoint[] getPoints();
     GeoPoint[] getBounds();
     String getId();
+    void setId(String id);
     void remove();
 }
