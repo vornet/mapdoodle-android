@@ -58,6 +58,7 @@ public class AnimatedPathDoodle implements Doodle {
             mPolyline.setPoints(toLatLngList());
             mPolyline.setZIndex(mStyle.getZIndex() + 1);
             mAnimationContext = new AnimationContext(mPolyline);
+            mShouldRedraw = false;
         }
 
         // Draw the tracer.
