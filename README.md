@@ -32,7 +32,7 @@ The *core* module contains all the major classes of this library.  Other modules
 ```gradle
 dependencies {
 	// ... other dependencies here
-    compile 'com.github.vornet.mapdoodle:core:0.0.3'
+    compile 'com.github.vornet.mapdoodle:core:0.0.4'
 }
 ```
 
@@ -128,5 +128,7 @@ mapDoodler.removeDoodle(doodle);
 mapDoodler.zoomToFitDoodle();
 // Zoom to fit all doodles on the map.
 mapDoodler.zoomToFitAllDoodles();
+// Change the style of a doodle. Style must be for the correct doodle type, otherwise no-op.
+doodle.setStyle(newStyle);
 
 ```

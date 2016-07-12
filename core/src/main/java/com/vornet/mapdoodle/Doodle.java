@@ -6,9 +6,16 @@ package com.vornet.mapdoodle;
 
 public interface Doodle {
     void draw(DoodleContext context);
+
     GeoPoint[] getPoints();
+
     GeoPoint[] getBounds();
+
     String getId();
+
     void setId(String id);
+
     void remove();
+
+    void setStyle(Object style);
 }

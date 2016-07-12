@@ -71,6 +71,13 @@ class PathDoodle implements Doodle {
     }
 
     @Override
+    public void setStyle(Object style) {
+        PathDoodleStyle pathDoodleStyle = (style instanceof PathDoodleStyle ? (PathDoodleStyle) style : null);
+        mStyle = pathDoodleStyle;
+        mShouldRedraw = true;
+    }
+
+    @Override
     public GeoPoint[] getBounds() {
         return LocationUtil.getBounds(mGeoPoints);
     }
@@ -98,10 +105,5 @@ class PathDoodle implements Doodle {
         }
 
         return latLngList;
-    }
-
-    public void setStyle(PathDoodleStyle newStyle) {
-        mStyle = newStyle;
-        mShouldRedraw = true;
     }
 }

@@ -18,6 +18,7 @@ public class AnimatedPathDoodle implements Doodle {
     private Polyline mPolyline;
     private PathDoodle mTracerDoodle;
     private AnimationContext mAnimationContext;
+    private boolean mShouldRedraw = true;
     private boolean mIsBeingRemoved = false;
     private MapDoodler mCanvas;
 
@@ -33,7 +34,11 @@ public class AnimatedPathDoodle implements Doodle {
             return;
         }
 
-        if (mPolyline == null) {
+        if (mPolyline == null || mShouldRedraw) {
+            if (mPolyline != null) {
+                mPolyline.remove();
+                mTracerDoodle.remove();
+            }
 
             if (mStyle.getTracerThickness() > 0) {
                 PathDoodleStyle pathStyle = new PathDoodleStyle();
@@ -43,7 +48,6 @@ public class AnimatedPathDoodle implements Doodle {
 
                 mTracerDoodle = new PathDoodle(mCanvas, pathStyle, mGeoPoints);
                 mTracerDoodle.draw(context);
-
             }
 
             PolylineOptions polylineOptions = new PolylineOptions();
@@ -151,6 +155,13 @@ public class AnimatedPathDoodle implements Doodle {
     @Override
     public void setId(String id) {
         this.mId = id;
+    }
+
+    @Override
+    public void setStyle(Object style) {
+        AnimatedPathDoodleStyle animatedPathDoodleStyle = (style instanceof AnimatedPathDoodleStyle ? (AnimatedPathDoodleStyle) style : null);
+        mStyle = animatedPathDoodleStyle;
+        mShouldRedraw = true;
     }
 
     private List<LatLng> toLatLngList() {
