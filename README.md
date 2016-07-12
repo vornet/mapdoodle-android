@@ -8,6 +8,8 @@
 
 Android library to create common map animations for Google Maps and other providers.  Note, work-in-progress.
 
+Shameless Plug: This library was written for my skiing & snowboarding app, [Mogul Bunny](http://www.mogulbunny.com/).
+
 # Sample Project
 
 The sample requires setting up and adding an Android API key for Google Maps.  For more information, see [this page.](https://developers.google.com/maps/documentation/android-api/signup)
