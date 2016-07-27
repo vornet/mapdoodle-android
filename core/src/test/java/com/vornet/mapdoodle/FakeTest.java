@@ -1,3 +1,5 @@
+package com.vornet.mapdoodle;
+
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
