@@ -104,12 +104,12 @@ public class LocationUtil {
         double bigLat = 0;
         double bigLong = 0;
         double smallLat = 360;
-        double smallLong = 180;
+        double smallLong = 360;
 
         for (GeoPoint point : points) {
 
             double normLat = point.getLatitude() + 180;
-            double normLong = point.getLongitude() + 90;
+            double normLong = point.getLongitude() + 180;
 
             if (normLat > bigLat) {
                 bigLat = normLat;
@@ -126,8 +126,8 @@ public class LocationUtil {
         }
 
         return new GeoPoint[]{
-                new GeoPoint(bigLat - 180, bigLong - 90),
-                new GeoPoint(smallLat - 180, smallLong - 90)};
+                new GeoPoint(bigLat - 180, bigLong - 180),
+                new GeoPoint(smallLat - 180, smallLong - 180)};
     }
 
     public static float getBoundsZoomLevel(Context context, GeoPoint northEast, GeoPoint southWest, double rotation, int mapWidthPx, int mapHeightPx, int padding) {
