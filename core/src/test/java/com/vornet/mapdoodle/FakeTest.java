@@ -12,4 +12,8 @@ public class FakeTest {
     public void fakeTest_True_IndeedTrue() {
         assertThat(true, is(true));
     }
+    @Test
+    public void fakeTest_True_ShouldFail() {
+        assertThat(true, is(false));
+    }
 }
