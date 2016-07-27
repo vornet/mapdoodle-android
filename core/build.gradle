@@ -1,23 +1,45 @@
 apply plugin: 'com.android.library'
 
 ext {
-    PUBLISH_GROUP_ID = 'com.vornet.mapdoodle'
-    PUBLISH_ARTIFACT_ID = 'core'
-    PUBLISH_VERSION = '0.0.0.1'
-    PLAY_SERVICES_VERSION = '8.4.0'
-    BUILD_TOOLS = "24.0.0"
-    TARGET_SDK = 24
+    playServiceVersion = '8.4.0'
+    buildTools = '24.0.0'
+    targetSDK = 24
+
+    bintrayRepo = 'maven'
+    bintrayName = 'mapdoodle'
+
+    publishedGroupId = 'com.github.vornet.mapdoodle'
+    libraryName = 'MapDoodle'
+    inceptionYear = '2016'
+    artifact = 'core'
+
+    libraryDescription = 'Android library to create common map animations'
+    libraryLabels = ['android', 'maps', 'animation']
+
+    siteUrl = 'https://github.com/vornet/mapdoodle-android'
+    gitUrl = 'https://github.com/vornet/mapdoodle-android.git'
+    issueTrackingUrl = 'https://github.com/vornet/mapdoodle-android/issues'
+
+    libraryVersion = '0.0.6'
+
+    developerId = 'vornet'
+    developerName = 'Vorn Mom'
+    developerEmail = 'vorn@vorn.us'
+
+    licenseName = 'The MIT License'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
 }
 
 android {
-    compileSdkVersion TARGET_SDK
-    buildToolsVersion BUILD_TOOLS
+    compileSdkVersion targetSDK
+    buildToolsVersion buildTools
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion TARGET_SDK
+        targetSdkVersion targetSDK
         versionCode 1
-        versionName PUBLISH_VERSION
+        versionName libraryVersion
         consumerProguardFiles 'progress-proguard.txt'
     }
     lintOptions {
@@ -27,5 +49,10 @@ android {
 }
 
 dependencies {
-    compile "com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"
+    compile "com.google.android.gms:play-services-maps:${playServiceVersion}"
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
+
+apply from: 'install.gradle'
+apply from: 'bintray.gradle'
