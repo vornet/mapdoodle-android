@@ -32,7 +32,7 @@ The *core* module contains all the major classes of this library.  Other modules
 ```gradle
 dependencies {
 	// ... other dependencies here
-    compile 'com.github.vornet.mapdoodle:core:0.0.6'
+    compile 'com.github.vornet.mapdoodle:core:0.0.7'
 }
 ```
 
