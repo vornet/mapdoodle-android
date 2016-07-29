@@ -28,6 +28,32 @@ public class AnimatedPathDoodle implements Doodle {
         mGeoPoints = points;
     }
 
+    private void calculatePathPoints() {
+        Point[] path = new Point[mGeoPoints.length];
+        for(int i = 0; i < mGeoPoints.length; i++) {
+            GeoPoint geoPoint = mGeoPoints[i];
+
+            // Normalize the coordinates.
+            double x = (geoPoint.getLongitude() + 180);
+            double y = (geoPoint.getLatitude() + 90);
+
+            path[i] = new Point(x, y);
+        }
+
+        // Each degree of latitude/longitude is approximately 69 miles (111 kilometers) apart.
+        double speedInLatLong = mStyle.getSpeed() / 111 / 3600 / 1000 * mCanvas.getRefreshRate();
+        //speedInLatLong = 0.000075;
+
+        // Not very accurate if the points are too far apart, but good enough for close distances.
+        Point[] pointsBetweenPaths = MathUtil.pointsBetweenPath(path, speedInLatLong);
+
+        mAnimationContext.points = new GeoPoint[pointsBetweenPaths.length];
+        // Unnormalize back to GPS coordinates.
+        for(int i = 0; i < pointsBetweenPaths.length; i++) {
+            mAnimationContext.points[i] = new GeoPoint(pointsBetweenPaths[i].getY() - 90, pointsBetweenPaths[i].getX() - 180);
+        }
+    }
+
     @Override
     public void draw(DoodleContext context) {
         if (mIsBeingRemoved) {
@@ -58,6 +84,7 @@ public class AnimatedPathDoodle implements Doodle {
             mPolyline.setPoints(toLatLngList());
             mPolyline.setZIndex(mStyle.getZIndex() + 1);
             mAnimationContext = new AnimationContext(mPolyline);
+            calculatePathPoints();
             mShouldRedraw = false;
         }
 
@@ -66,59 +93,14 @@ public class AnimatedPathDoodle implements Doodle {
             mTracerDoodle.draw(context);
         }
 
-        GeoPoint startPoint = mGeoPoints[mAnimationContext.currentPointIndex];
-        GeoPoint endPoint = mGeoPoints[mAnimationContext.currentPointIndex + 1];
+        GeoPoint currentPoint = mAnimationContext.points[mAnimationContext.currentPointIndex];
+        mAnimationContext.drawPointList.add(new com.google.android.gms.maps.model.LatLng(currentPoint.getLatitude(), currentPoint.getLongitude()));
+        mAnimationContext.polyline.setPoints(mAnimationContext.drawPointList);
+        mAnimationContext.currentPointIndex++;
 
-        double la;
-        double lo;
-
-        if (startPoint.equals(endPoint)) {
-            mAnimationContext.currentPointIndex++;
-            return;
-        }
-
-        // Distance
-        double distance = calculateDistance(startPoint, endPoint) / 1000;
-
-        double speedInMs = mStyle.getSpeed() / 3600 / 1000;
-        double divider = distance * 1 / (speedInMs * mCanvas.getRefreshRate());
-
-        double step = Math.sqrt(Math.pow(endPoint.getLatitude() - startPoint.getLatitude(), 2) + Math.pow(endPoint.getLongitude() - startPoint.getLongitude(), 2)) / divider;
-
-        double x0 = startPoint.getLatitude();
-        double y0 = startPoint.getLongitude();
-        double x1 = endPoint.getLatitude();
-        double y1 = endPoint.getLongitude();
-        // Slope
-        double m = (y1 - y0) / (x1 - x0);
-
-        // flow direction
-        if (x1 < x0) {
-            la = x0 - mAnimationContext.xOffset / Math.sqrt(1 + Math.pow(m, 2));
-        } else {
-            la = x0 + mAnimationContext.xOffset / Math.sqrt(1 + Math.pow(m, 2));
-        }
-        lo = m * (la - x0) + y0;
-        mAnimationContext.xOffset += step;
-
-        if (Math.abs(la - endPoint.getLatitude()) < mAnimationContext.endPointLatDiff &&
-                Math.abs(lo - endPoint.getLongitude()) < mAnimationContext.endPointLongDiff) {
-            mAnimationContext.endPointLatDiff = Math.abs(la - endPoint.getLatitude());
-            mAnimationContext.endPointLongDiff = Math.abs(lo - endPoint.getLongitude());
-            mAnimationContext.drawPointList.add(new com.google.android.gms.maps.model.LatLng(la, lo));
-            mAnimationContext.polyline.setPoints(mAnimationContext.drawPointList);
-        } else {
-            mAnimationContext.currentPointIndex++;
-            mAnimationContext.xOffset = 0;
-            mAnimationContext.endPointLatDiff = 2147483647;
-            mAnimationContext.endPointLongDiff = 2147483647;
-
-            if (mAnimationContext.currentPointIndex >= mGeoPoints.length - 1) {
-                mAnimationContext.drawPointList.clear();
-                mAnimationContext.currentPointIndex = 0;
-                mAnimationContext.xOffset = 0;
-            }
-
+        if(mAnimationContext.currentPointIndex >= mAnimationContext.points.length) {
+            mAnimationContext.drawPointList.clear();
+            mAnimationContext.currentPointIndex = 0;
         }
     }
 
@@ -194,6 +176,7 @@ public class AnimatedPathDoodle implements Doodle {
     }
 
     private class AnimationContext {
+        public GeoPoint[] points;
         public int currentPointIndex;
         public double xOffset;
         public List<LatLng> drawPointList;
