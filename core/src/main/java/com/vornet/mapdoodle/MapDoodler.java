@@ -27,6 +27,7 @@ public class MapDoodler {
     private int mViewportWidth;
     private int mViewportHeight;
     private int mRefreshRate;
+    private boolean mIsPausing = false;
 
     private ArrayList<Doodle> mDoodles;
 
@@ -38,9 +39,11 @@ public class MapDoodler {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    DoodleContext doodleContext = new DoodleContext(mMap, mRefreshRate);
-                    for (Doodle doodle : mDoodles) {
-                        doodle.draw(doodleContext);
+                    if(!mIsPausing) {
+                        DoodleContext doodleContext = new DoodleContext(mMap, mRefreshRate);
+                        for (Doodle doodle : mDoodles) {
+                            doodle.draw(doodleContext);
+                        }
                     }
                 }
             });
@@ -140,5 +143,17 @@ public class MapDoodler {
 
     public int getRefreshRate() {
         return mRefreshRate;
+    }
+
+    public void onResume() {
+        mIsPausing = false;
+    }
+
+    public void onDestroy() {
+        mScheduler.cancel(true);
+    }
+
+    public void onPause() {
+        mIsPausing = true;
     }
 }

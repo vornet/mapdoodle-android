@@ -55,18 +55,21 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
     public void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        mMapDoodler.onDestroy();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+        if(mMapDoodler != null) { mMapDoodler.onPause(); }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        if(mMapDoodler != null) { mMapDoodler.onResume(); }
     }
 
     @Override
@@ -76,7 +79,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
     }
 
     public void setupMapDoodle() {
-        if(mGoogleMap == null || !mMapViewFinishedLayout) {
+        if (mMapDoodler != null || mGoogleMap == null || !mMapViewFinishedLayout) {
             return;
         }
 
@@ -168,7 +171,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
         mVisibleDoodle++;
         mVisibleDoodle = mVisibleDoodle % (mDoodles.length + 1);
 
-        if(mVisibleDoodle < mDoodles.length) {
+        if (mVisibleDoodle < mDoodles.length) {
             // Zoom to fit each doodle.
             mMapDoodler.zoomToFitDoodle(mDoodles[mVisibleDoodle], 0, true, true);
         } else {
